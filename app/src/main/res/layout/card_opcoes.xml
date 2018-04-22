@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="@color/greyLigh">
+
+    <Button
+        android:layout_gravity="center"
+        android:id="@+id/bttEditarOpcoesCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:background="@drawable/button_retangle"
+        android:text="Editar" />
+
+
+    <Button
+        android:layout_gravity="center"
+        android:id="@+id/bttExcluirOpcoesCard"
+        android:background="@drawable/button_retangle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="Excluir"/>
+
+
+</LinearLayout>

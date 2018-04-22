@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item>
+        <clip>
+            <shape>
+                <gradient
+                    android:startColor="@color/greenLight"
+                    android:endColor="@color/greenLight"
+                    />
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>

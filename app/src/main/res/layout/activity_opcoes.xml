@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greyLigh">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/opcoesToolbar"
+                android:elevation="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary">
+
+                <TextView
+                    android:id="@+id/opcoesToolbarTxtTitle"
+                    android:text="@string/opcoes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextTitleCenter"/>
+
+            </android.support.v7.widget.Toolbar>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@color/greyDark">
+
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/valoresFixos"
+                    style="@style/TextTitle2Left"/>
+
+            </LinearLayout>
+
+            <View
+                android:background="@color/greyDarkBlack"
+                android:layout_width = "fill_parent"
+                android:layout_height="1.5dp"
+                android:layout_centerVertical ="true"
+                android:layout_alignParentTop="true"/>
+
+
+            <LinearLayout
+                android:id="@+id/linenarOpcoesRat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="0.8">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icons8money96"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="0.2">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextNormal"
+                        android:text="@string/horaRat"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/valorHora"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:background="@color/greyDarkBlack"
+                android:layout_width = "fill_parent"
+                android:layout_height="1.5dp"
+                android:layout_centerVertical ="true"
+                android:layout_alignParentTop="true"/>
+
+            <LinearLayout
+                android:id="@+id/linenarOpcoesAlimentacao"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="0.8">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icons8pizza96"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="0.2">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextNormal"
+                        android:text="@string/alimentacao"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/valorAlimentacao"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:background="@color/greyDarkBlack"
+                android:layout_width = "fill_parent"
+                android:layout_height="1.5dp"
+                android:layout_centerVertical ="true"
+                android:layout_alignParentTop="true"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@color/greyDark">
+
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bancoDeDados"
+                    style="@style/TextTitle2Left"/>
+
+            </LinearLayout>
+
+            <View
+                android:background="@color/greyDarkBlack"
+                android:layout_width = "fill_parent"
+                android:layout_height="1.5dp"
+                android:layout_centerVertical ="true"
+                android:layout_alignParentTop="true"/>
+
+
+            <LinearLayout
+                android:id="@+id/linenarOpcoesBackupImpInterno"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="0.8">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icons8databackup96"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="0.2">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextNormal"
+                        android:text="@string/backupDispositivo"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/backupDispositivoSub"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <View
+                android:background="@color/greyDarkBlack"
+                android:layout_width = "fill_parent"
+                android:layout_height="1.5dp"
+                android:layout_centerVertical ="true"
+                android:layout_alignParentTop="true"/>
+
+
+            <LinearLayout
+                android:id="@+id/linenarOpcoesBackupRestInterno"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="0.8">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icons8synchronize96"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="0.2">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextNormal"
+                        android:text="@string/restaurarBackupDispositivo"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/restaurarBackupDispositivoSub"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:background="@color/greyDarkBlack"
+                android:layout_width = "fill_parent"
+                android:layout_height="1.5dp"
+                android:layout_centerVertical ="true"
+                android:layout_alignParentTop="true"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+</android.support.design.widget.CoordinatorLayout>

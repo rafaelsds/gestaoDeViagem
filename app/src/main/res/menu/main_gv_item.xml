@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_gerar_alimentacao"
+        android:orderInCategory="100"
+        android:title="@string/gerarAlimentacao"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_excluir_itens"
+        android:orderInCategory="100"
+        android:title="@string/excluirItens"
+        app:showAsAction="never" />
+</menu>
