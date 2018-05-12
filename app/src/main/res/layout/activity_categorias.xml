@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".CategoriasActivity">
 
     <LinearLayout
         android:id="@+id/categoriaLinear"
@@ -16,49 +17,27 @@
         android:orientation="vertical"
         android:background="@color/greyLigh">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/categoriaEdtToolbar"
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary">
+            android:layout_height="match_parent"
+            android:padding="40px">
 
-            <TextView
-                android:id="@+id/categoriaTxtTitle"
-                style="@style/TextTitleCenter"
-                android:text="@string/categorias"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </android.support.v7.widget.Toolbar>
-
-        <View
-            android:background="@color/greyDarkBlack"
-            android:layout_width = "fill_parent"
-            android:layout_height="1.5dp"
-            android:layout_centerVertical ="true"
-            android:layout_alignParentTop="true"/>
-
-            <ScrollView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="40px">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <android.support.v7.widget.RecyclerView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/recyclerViewCategorias"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"/>
 
-                    <android.support.v7.widget.RecyclerView
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/recyclerViewCategorias"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
-                </LinearLayout>
-            </ScrollView>
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 

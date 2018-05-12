@@ -29,7 +29,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.hanks.animatecheckbox:library:0.1'
-    compile 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
+   //compile 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
 
     compile 'com.google.android.gms:play-services-drive:10.0.1'
     compile 'com.google.android.gms:play-services-auth:10.0.1'

@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clickable="true"
+    tools:context=".MainActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/content_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary">
+
+            <TextView
+                android:id="@+id/content_toolbar_title"
+                style="@style/TextTitleCenter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gestaoDeViagem"/>
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/imgFiltro"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="end|center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search"/>
+
+        </android.support.v7.widget.Toolbar>
+
+    <View
+        android:background="@color/greyDarkBlack"
+        android:layout_width = "fill_parent"
+        android:layout_height="1.5dp"
+        android:layout_centerVertical ="true"
+        android:layout_alignParentTop="true"/>
+
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

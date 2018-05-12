@@ -39,14 +39,11 @@ import com.app.rafael.gestaodeviagem.entidades.GestaoDeViagem;
 import com.app.rafael.gestaodeviagem.entidades.GestaoDeViagemItem;
 import com.app.rafael.gestaodeviagem.entidades.TipoCategoria;
 import com.app.rafael.gestaodeviagem.utilidades.Alert;
+import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic;
 import com.app.rafael.gestaodeviagem.utilidades.ConverterDate;
 import com.app.rafael.gestaodeviagem.utilidades.GetDate;
 import com.app.rafael.gestaodeviagem.utilidades.RegraCampo;
 import com.app.rafael.gestaodeviagem.utilidades.SnackBar;
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -108,8 +105,6 @@ public class GestaoDeViagemItemActivity extends AppCompatActivity {
 
 
         if (item.getItemId() == android.R.id.home) {
-            Intent myIntent = new Intent(getApplicationContext(), GestaoDeViagemActivity.class);
-            startActivityForResult(myIntent, 0);
             finish();
         }
 
@@ -246,8 +241,6 @@ public class GestaoDeViagemItemActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        Intent myIntent = new Intent(getApplicationContext(), GestaoDeViagemActivity.class);
-        startActivityForResult(myIntent, 0);
         finish();
     }
 
@@ -515,17 +508,17 @@ public class GestaoDeViagemItemActivity extends AppCompatActivity {
 
         private void alert_opcoes_card(final String idP, final String categoriaP, final String dataP, final String valorP, final String observacaoP) {
 
-            new FancyAlertDialog.Builder(GestaoDeViagemItemActivity.this)
+            new AlertDynamic.Builder(GestaoDeViagemItemActivity.this)
                     .setTitle(getString(R.string.escolhaUmaOpcao))
                     .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
                     .setPositiveBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))  //Don't pass R.color.colorvalue
                     .setPositiveBtnText(getString(R.string.excluir))
                     .setNegativeBtnText(getString(R.string.editar))
                     .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
-                    .setAnimation(Animation.POP)
+                    .setAnimation(AlertDynamic.Animation.POP)
                     .isCancellable(true)
-                    .setIcon(R.drawable.ic_error_outline_white_24dp, Icon.Visible)
-                    .OnPositiveClicked(new FancyAlertDialogListener() {
+                    .setIcon(R.drawable.ic_error_outline_white_24dp, AlertDynamic.Icon.Visible)
+                    .OnPositiveClicked(new AlertDynamic.AlertDynamicDialogListener() {
                         @Override
                         public void OnClick() {
                             // ACAO EXCLUIR
@@ -534,7 +527,7 @@ public class GestaoDeViagemItemActivity extends AppCompatActivity {
                             new SnackBar(getString(R.string.registroExcluido), gvItemCoordinator, Snackbar.LENGTH_LONG);
                         }
                     })
-                    .OnNegativeClicked(new FancyAlertDialogListener() {
+                    .OnNegativeClicked(new AlertDynamic.AlertDynamicDialogListener() {
                         @Override
                         public void OnClick() {
                             // ACAO EDITAR

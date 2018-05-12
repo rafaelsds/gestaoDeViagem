@@ -14,44 +14,6 @@
         android:orientation="vertical"
         android:background="@color/greyLigh">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/ratToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary">
-
-            <android.support.design.widget.CoordinatorLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@color/greyDark"
-                android:layout_gravity="center">
-
-                <TextView
-                    android:id="@+id/ratTxtRats"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rats"
-                    style="@style/TextTitleCenter"/>
-
-                <ImageView
-                    android:id="@+id/imgRatFiltro"
-                    android:layout_marginRight="20dp"
-                    android:layout_gravity="end|center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/search"/>
-
-            </android.support.design.widget.CoordinatorLayout>
-        </android.support.v7.widget.Toolbar>
-
-        <View
-            android:background="@color/greyDarkBlack"
-            android:layout_width = "fill_parent"
-            android:layout_height="1.5dp"
-            android:layout_centerVertical ="true"
-            android:layout_alignParentTop="true"/>
-
         <LinearLayout
             android:id="@+id/RatLinearFiltro"
             android:visibility="gone"

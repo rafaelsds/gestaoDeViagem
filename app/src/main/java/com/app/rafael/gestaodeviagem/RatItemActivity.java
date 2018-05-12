@@ -40,13 +40,10 @@ import com.app.rafael.gestaodeviagem.entidades.GestaoDeViagem;
 import com.app.rafael.gestaodeviagem.entidades.Rat;
 import com.app.rafael.gestaodeviagem.entidades.RatItem;
 import com.app.rafael.gestaodeviagem.utilidades.Alert;
+import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic;
 import com.app.rafael.gestaodeviagem.utilidades.ConverterDate;
 import com.app.rafael.gestaodeviagem.utilidades.RegraCampo;
 import com.app.rafael.gestaodeviagem.utilidades.SnackBar;
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -181,8 +178,8 @@ public class RatItemActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            Intent myIntent = new Intent(getApplicationContext(), RatActivity.class);
-            startActivityForResult(myIntent, 0);
+//            Intent myIntent = new Intent(getApplicationContext(), RatActivity.class);
+//            startActivityForResult(myIntent, 0);
             finish();
             return false;
         }
@@ -263,8 +260,8 @@ public class RatItemActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        Intent myIntent = new Intent(getApplicationContext(), RatActivity.class);
-        startActivityForResult(myIntent, 0);
+//        Intent myIntent = new Intent(getApplicationContext(), RatActivity.class);
+//        startActivityForResult(myIntent, 0);
         finish();
     }
 
@@ -510,17 +507,17 @@ public class RatItemActivity extends AppCompatActivity {
 //            alertRatItem = builder.create();
 //            alertRatItem.show();
 
-            new FancyAlertDialog.Builder(RatItemActivity.this)
+            new AlertDynamic.Builder(RatItemActivity.this)
                     .setTitle(getString(R.string.escolhaUmaOpcao))
                     .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
                     .setPositiveBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))  //Don't pass R.color.colorvalue
                     .setPositiveBtnText(getString(R.string.excluir))
                     .setNegativeBtnText(getString(R.string.editar))
                     .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
-                    .setAnimation(Animation.POP)
+                    .setAnimation(AlertDynamic.Animation.POP)
                     .isCancellable(true)
-                    .setIcon(R.drawable.ic_error_outline_white_24dp, Icon.Visible)
-                    .OnPositiveClicked(new FancyAlertDialogListener() {
+                    .setIcon(R.drawable.ic_error_outline_white_24dp, AlertDynamic.Icon.Visible)
+                    .OnPositiveClicked(new AlertDynamic.AlertDynamicDialogListener() {
                         @Override
                         public void OnClick() {
                             // ACAO EXCLUIR
@@ -529,7 +526,7 @@ public class RatItemActivity extends AppCompatActivity {
                             new SnackBar(getString(R.string.registroExcluido), ratItemLinear, Snackbar.LENGTH_LONG);
                         }
                     })
-                    .OnNegativeClicked(new FancyAlertDialogListener() {
+                    .OnNegativeClicked(new AlertDynamic.AlertDynamicDialogListener() {
                         @Override
                         public void OnClick() {
                             // ACAO EDITAR

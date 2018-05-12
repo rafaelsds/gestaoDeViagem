@@ -7,11 +7,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,81 +22,79 @@ import android.widget.TextView;
 import com.app.rafael.gestaodeviagem.db.Backup;
 import com.app.rafael.gestaodeviagem.db.Dml;
 import com.app.rafael.gestaodeviagem.db.tabelas.Configuracoes;
+import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic;
 import com.app.rafael.gestaodeviagem.utilidades.RegraCampo;
 import com.app.rafael.gestaodeviagem.utilidades.SnackBar;
 import com.app.rafael.gestaodeviagem.utilidades.System;
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
 
-public class OpcoesActivity extends AppCompatActivity {
+public class OpcoesActivity extends Fragment {
 
     private LinearLayout linearOpcoesRat, linearOpcoesAlimentacao, linenarOpcoesBackupImpInterno, linenarOpcoesBackupRestInterno;
     private Dml dml;
     private Toolbar toolbar;
     private TextView toolbarTxtTitle;
+    private View view;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_opcoes);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_opcoes, container, false);
         inicialise();
-        ajusteToolbar();
         botoes();
+        return view;
 
     }
+
 
     public void inicialise(){
-        linearOpcoesRat = (LinearLayout)findViewById(R.id.linenarOpcoesRat);
-        linearOpcoesAlimentacao = (LinearLayout)findViewById(R.id.linenarOpcoesAlimentacao);
-        linenarOpcoesBackupImpInterno = (LinearLayout)findViewById(R.id.linenarOpcoesBackupImpInterno);
-        linenarOpcoesBackupRestInterno = (LinearLayout)findViewById(R.id.linenarOpcoesBackupRestInterno);
-        dml = new Dml(OpcoesActivity.this);
-        toolbar = (Toolbar) findViewById(R.id.opcoesToolbar);
-        toolbarTxtTitle = (TextView)findViewById(R.id.opcoesToolbarTxtTitle);
+        linearOpcoesRat = (LinearLayout)view.findViewById(R.id.linenarOpcoesRat);
+        linearOpcoesAlimentacao = (LinearLayout)view.findViewById(R.id.linenarOpcoesAlimentacao);
+        linenarOpcoesBackupImpInterno = (LinearLayout)view.findViewById(R.id.linenarOpcoesBackupImpInterno);
+        linenarOpcoesBackupRestInterno = (LinearLayout)view.findViewById(R.id.linenarOpcoesBackupRestInterno);
+        dml = new Dml(getContext());
+//        toolbar = (Toolbar) findViewById(R.id.opcoesToolbar);
+//        toolbarTxtTitle = (TextView)findViewById(R.id.opcoesToolbarTxtTitle);
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//
+//        if (item.getItemId() == android.R.id.home) {
+//            Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+//            startActivityForResult(myIntent, 0);
+//            finish();
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
-        if (item.getItemId() == android.R.id.home) {
-            Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivityForResult(myIntent, 0);
-            finish();
-        }
 
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    public void ajusteToolbar(){
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        toolbar.postDelayed(new Runnable()
-        {
-            @Override
-            public void run ()
-            {
-                int maxWidth = toolbar.getWidth();
-                int titleWidth = toolbarTxtTitle.getWidth();
-                int iconWidth = maxWidth - titleWidth;
-
-                if (iconWidth > 0)
-                {
-                    int width = maxWidth - iconWidth * 2;
-                    toolbarTxtTitle.setMinimumWidth(width);
-                    toolbarTxtTitle.getLayoutParams().width = width;
-                }
-            }
-        }, 0);
-    }
+//    public void ajusteToolbar(){
+//
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        toolbar.postDelayed(new Runnable()
+//        {
+//            @Override
+//            public void run ()
+//            {
+//                int maxWidth = toolbar.getWidth();
+//                int titleWidth = toolbarTxtTitle.getWidth();
+//                int iconWidth = maxWidth - titleWidth;
+//
+//                if (iconWidth > 0)
+//                {
+//                    int width = maxWidth - iconWidth * 2;
+//                    toolbarTxtTitle.setMinimumWidth(width);
+//                    toolbarTxtTitle.getLayoutParams().width = width;
+//                }
+//            }
+//        }, 0);
+//    }
 
     public void botoes(){
         linearOpcoesRat.setOnClickListener(new View.OnClickListener() {
@@ -114,9 +115,9 @@ public class OpcoesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                System.permissions(OpcoesActivity.this);
+                System.permissions(getContext());
 
-                new FancyAlertDialog.Builder(OpcoesActivity.this)
+                new AlertDynamic.Builder(getContext())
                         .setTitle(getString(R.string.atencaoE))
                         .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
                         .setMessage(getString(R.string.desejaRealizarBackup))
@@ -124,20 +125,20 @@ public class OpcoesActivity extends AppCompatActivity {
                         .setPositiveBtnText(getString(R.string.sim))
                         .setNegativeBtnText(getString(R.string.nao))
                         .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
-                        .setAnimation(Animation.POP)
+                        .setAnimation(AlertDynamic.Animation.POP)
                         .isCancellable(true)
-                        .setIcon(R.drawable.ic_error_outline_black_24dp, Icon.Visible)
-                        .OnPositiveClicked(new FancyAlertDialogListener() {
+                        .setIcon(R.drawable.ic_error_outline_black_24dp, AlertDynamic.Icon.Visible)
+                        .OnPositiveClicked(new AlertDynamic.AlertDynamicDialogListener() {
                             @Override
                             public void OnClick() {
-                                if(Backup.exportar(OpcoesActivity.this)) {
+                                if(Backup.exportar(getContext())) {
                                     new SnackBar(getString(R.string.backupRealizado), linenarOpcoesBackupImpInterno, Snackbar.LENGTH_LONG);
                                     return;
                                 }
                                 new SnackBar(getString(R.string.backupRealizadoErro), linenarOpcoesBackupRestInterno, Snackbar.LENGTH_LONG);
                             }
                         })
-                        .OnNegativeClicked(new FancyAlertDialogListener() {
+                        .OnNegativeClicked(new AlertDynamic.AlertDynamicDialogListener() {
                             @Override
                             public void OnClick() {
                             }
@@ -150,9 +151,9 @@ public class OpcoesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                System.permissions(OpcoesActivity.this);
+                System.permissions(getContext());
 
-                new FancyAlertDialog.Builder(OpcoesActivity.this)
+                new AlertDynamic.Builder(getContext())
                         .setTitle(getString(R.string.atencaoE))
                         .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
                         .setMessage(getString(R.string.desejaRestaurarbackup))
@@ -160,20 +161,20 @@ public class OpcoesActivity extends AppCompatActivity {
                         .setPositiveBtnText(getString(R.string.sim))
                         .setNegativeBtnText(getString(R.string.nao))
                         .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
-                        .setAnimation(Animation.POP)
+                        .setAnimation(AlertDynamic.Animation.POP)
                         .isCancellable(true)
-                        .setIcon(R.drawable.ic_error_outline_black_24dp, Icon.Visible)
-                        .OnPositiveClicked(new FancyAlertDialogListener() {
+                        .setIcon(R.drawable.ic_error_outline_black_24dp, AlertDynamic.Icon.Visible)
+                        .OnPositiveClicked(new AlertDynamic.AlertDynamicDialogListener() {
                             @Override
                             public void OnClick() {
-                                if(Backup.importar(OpcoesActivity.this)) {
+                                if(Backup.importar(getContext())) {
                                     new SnackBar(getString(R.string.backupRestaurado), linenarOpcoesBackupRestInterno, Snackbar.LENGTH_LONG);
                                     return;
                                 }
                                 new SnackBar(getString(R.string.backupRestauradoErro), linenarOpcoesBackupRestInterno, Snackbar.LENGTH_LONG);
                             }
                         })
-                        .OnNegativeClicked(new FancyAlertDialogListener() {
+                        .OnNegativeClicked(new AlertDynamic.AlertDynamicDialogListener() {
                             @Override
                             public void OnClick() {
                             }
@@ -195,7 +196,7 @@ public class OpcoesActivity extends AppCompatActivity {
         final TextView txtTitulo;
 
         viewInserirValorFixo = getLayoutInflater().inflate(R.layout.inserir_valor_fixo, null);
-        builder = new AlertDialog.Builder(this);
+        builder = new AlertDialog.Builder(getContext());
         builder.setView(viewInserirValorFixo);
         alert = builder.create();
         alert.setCanceledOnTouchOutside(true);
@@ -228,7 +229,7 @@ public class OpcoesActivity extends AppCompatActivity {
         viewInserirValorFixo.findViewById(R.id.bttSalvarInserirValor).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(RegraCampo.obrigatorio(edtValor, getApplicationContext())){
+                if(RegraCampo.obrigatorio(edtValor, getContext())){
 
                     ContentValues valores;
                     valores = new ContentValues();
@@ -259,10 +260,10 @@ public class OpcoesActivity extends AppCompatActivity {
         alert.show();
     }
 
-    @Override
-    public void onBackPressed(){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(myIntent, 0);
-        finish();
-    }
+//    @Override
+//    public void onBackPressed(){
+//        Intent myIntent = new Intent(getContext(), MainActivity.class);
+//        startActivityForResult(myIntent, 0);
+//        finish();
+//    }
 }

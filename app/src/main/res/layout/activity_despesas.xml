@@ -14,29 +14,6 @@
         android:orientation="vertical"
         android:background="@color/greyLigh">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/despesaToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary">
-
-            <TextView
-                android:id="@+id/despesaTxtTitle"
-                style="@style/TextTitleCenter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/despesas"/>
-
-        </android.support.v7.widget.Toolbar>
-
-        <View
-            android:background="@color/greyDarkBlack"
-            android:layout_width = "fill_parent"
-            android:layout_height="1.5dp"
-            android:layout_centerVertical ="true"
-            android:layout_alignParentTop="true"/>
-
-
         <ScrollView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"

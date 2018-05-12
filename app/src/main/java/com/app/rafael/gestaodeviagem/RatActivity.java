@@ -12,6 +12,7 @@ import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -42,21 +43,18 @@ import com.app.rafael.gestaodeviagem.db.tabelas.RatsItens;
 import com.app.rafael.gestaodeviagem.entidades.Rat;
 import com.app.rafael.gestaodeviagem.entidades.Status;
 import com.app.rafael.gestaodeviagem.utilidades.Alert;
+import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic;
 import com.app.rafael.gestaodeviagem.utilidades.ConverterDate;
 import com.app.rafael.gestaodeviagem.utilidades.FormatNumber;
 import com.app.rafael.gestaodeviagem.utilidades.GetDate;
 import com.app.rafael.gestaodeviagem.utilidades.RegraCampo;
 import com.app.rafael.gestaodeviagem.utilidades.SnackBar;
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class RatActivity extends AppCompatActivity {
+public class RatActivity extends Fragment {
 
     private FloatingActionButton btnAdicionar;
     private AlertDialog alertRat, alertaCalendar;
@@ -67,84 +65,45 @@ public class RatActivity extends AppCompatActivity {
     private LinearLayout linearFiltro;
     private EditText edtFiltroDtFinal, edtFiltroDtInicial;
     private Spinner spnFiltroStatus;
-    private ImageView imgFiltro;
     private Calendar calendar;
-    private Toolbar toolbar;
-    private TextView toolbarTxtTitle;
-    Dml dml;
+    private Dml dml;
+    private View view;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rat);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_rat, container, false);
         inicialise();
-        ajusteToolbar();
         botoes();
-        carregarCard();
+        return view;
 
     }
 
+    @Override
+    public void onResume() {
+        carregarCard();
+        super.onResume();
+    }
+
     private void Vibrar(){
-        Vibrator rr = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        long milliseconds = 50;//'30' é o tempo em milissegundos, é basicamente o tempo de duração da vibração. portanto, quanto maior este numero, mais tempo de vibração você irá ter
+        Vibrator rr = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        long milliseconds = 50;
         rr.vibrate(milliseconds);
     }
 
     public void inicialise(){
-        dml = new Dml(RatActivity.this);
-        btnAdicionar = (FloatingActionButton)findViewById(R.id.bttAddRat);
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerViewRat);
-        linearFiltro = (LinearLayout)findViewById(R.id.RatLinearFiltro);
-        toolbarTxtTitle = (TextView) findViewById(R.id.ratTxtRats);
-        edtFiltroDtInicial = (EditText)findViewById(R.id.RatFiltroEdtDtInicial);
+        dml = new Dml(getContext());
+        btnAdicionar = (FloatingActionButton)view.findViewById(R.id.bttAddRat);
+        recyclerView = (RecyclerView)view.findViewById(R.id.recyclerViewRat);
+        linearFiltro = (LinearLayout)view.findViewById(R.id.RatLinearFiltro);
+        edtFiltroDtInicial = (EditText)view.findViewById(R.id.RatFiltroEdtDtInicial);
         edtFiltroDtInicial.setText(GetDate.today(true,-1,0).toString());
-        edtFiltroDtFinal = (EditText)findViewById(R.id.RatFiltroEdtDtFinal);
+        edtFiltroDtFinal = (EditText)view.findViewById(R.id.RatFiltroEdtDtFinal);
         edtFiltroDtFinal.setText(GetDate.today(false,0,0).toString());
-        spnFiltroStatus = (Spinner)findViewById(R.id.RatFiltroSpnStatus);
-        spnFiltroStatus.setAdapter(new ArrayAdapter<Status>(this, android.R.layout.simple_spinner_item, Status.values()));
+        spnFiltroStatus = (Spinner)view.findViewById(R.id.RatFiltroSpnStatus);
+        spnFiltroStatus.setAdapter(new ArrayAdapter<Status>(getContext(), android.R.layout.simple_spinner_item, Status.values()));
         spnFiltroStatus.setSelection(1);
-        imgFiltro = (ImageView)findViewById(R.id.imgRatFiltro);
         calendar = Calendar.getInstance();
-        toolbar = (Toolbar) findViewById(R.id.ratToolbar);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (item.getItemId() == android.R.id.home) {
-            Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivityForResult(myIntent, 0);
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void ajusteToolbar(){
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        toolbar.postDelayed(new Runnable()
-        {
-            @Override
-            public void run ()
-            {
-                int maxWidth = toolbar.getWidth();
-                int titleWidth = toolbarTxtTitle.getWidth();
-                int iconWidth = maxWidth - titleWidth;
-
-                if (iconWidth > 0)
-                {
-                    int width = maxWidth - iconWidth * 2;
-                    toolbarTxtTitle.setMinimumWidth(width);
-                    toolbarTxtTitle.getLayoutParams().width = width;
-                }
-            }
-        }, 0);
     }
 
 
@@ -206,18 +165,6 @@ public class RatActivity extends AppCompatActivity {
             }
         });
 
-        imgFiltro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (linearFiltro.getVisibility() == View.GONE){
-                    linearFiltro.setVisibility(View.VISIBLE);
-                }else{
-                    linearFiltro.setVisibility(View.GONE);
-                }
-            }
-        });
-
-
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -247,14 +194,6 @@ public class RatActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onBackPressed(){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(myIntent, 0);
-        finish();
-    }
-
-
     public void adicionarRegistro(final String idP, final String nrRatP, final String dtInicialP, String dtFinalP, final String TipoP){
 
         final EditText edtNrRat, edtDtInicial, edtDtFinal;
@@ -264,7 +203,7 @@ public class RatActivity extends AppCompatActivity {
         final AlertDialog alert;
 
         viewInserirRat = getLayoutInflater().inflate(R.layout.inserir_rat, null);
-        builder = new AlertDialog.Builder(this);
+        builder = new AlertDialog.Builder(getContext());
         builder.setView(viewInserirRat);
         alert = builder.create();
         alert.setCanceledOnTouchOutside(true);
@@ -284,7 +223,7 @@ public class RatActivity extends AppCompatActivity {
         spnStatus = (Spinner) viewInserirRat.findViewById(R.id.spnStatusRat);
 
         ArrayAdapter<Status> spinnerArrayAdapter = new ArrayAdapter<Status>(
-                this,R.layout.spinner_item,Status.values());
+                getContext(), R.layout.spinner_item,Status.values());
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown);
         spnStatus.setAdapter(spinnerArrayAdapter);
 
@@ -297,7 +236,7 @@ public class RatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 obterDataCalendar(edtDtInicial);
-                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
+                ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                         .hideSoftInputFromWindow(viewInserirRat.findViewById(R.id.edtRatDtInicial).getWindowToken(), 0);
             }
         });
@@ -307,7 +246,7 @@ public class RatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 obterDataCalendar(edtDtFinal);
-                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
+                ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                         .hideSoftInputFromWindow(viewInserirRat.findViewById(R.id.edtRatDtFinal).getWindowToken(), 0);
             }
         });
@@ -315,12 +254,12 @@ public class RatActivity extends AppCompatActivity {
         viewInserirRat.findViewById(R.id.bttSalvarRat).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(RegraCampo.obrigatorio(spnStatus, getApplicationContext())){
-                    if(RegraCampo.obrigatorio(edtDtInicial, getApplicationContext())){
-                        if(RegraCampo.obrigatorio(edtDtFinal, getApplicationContext())){
+                if(RegraCampo.obrigatorio(spnStatus, getContext())){
+                    if(RegraCampo.obrigatorio(edtDtInicial, getContext())){
+                        if(RegraCampo.obrigatorio(edtDtFinal, getContext())){
 
                             if(!compareDate(edtDtInicial.getText().toString(), edtDtFinal.getText().toString())){
-                                Alert a = new Alert(RatActivity.this, getString(R.string.atencao),"A data inicial não pode ser superior a data final!");
+                                Alert a = new Alert(getContext(), getString(R.string.atencao),"A data inicial não pode ser superior a data final!");
                                 return;
                             }
 
@@ -370,7 +309,7 @@ public class RatActivity extends AppCompatActivity {
     private void carregarCard(){
 
         if(!compareDate(edtFiltroDtInicial.getText().toString(), edtFiltroDtFinal.getText().toString())){
-            Alert a = new Alert(RatActivity.this, getString(R.string.atencao),"A data inicial não pode ser superior a data final!");
+            Alert a = new Alert(getContext(), getString(R.string.atencao),"A data inicial não pode ser superior a data final!");
             return;
         }
 
@@ -417,13 +356,13 @@ public class RatActivity extends AppCompatActivity {
                     cursor.moveToNext();
                 }
             }else{
-                Toast.makeText(getApplicationContext(), getString(R.string.nenhumRegistro),
+                Toast.makeText(getContext(), getString(R.string.nenhumRegistro),
                         Toast.LENGTH_SHORT).show();
             }
         }
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new CardAdapter(RatActivity.this,list));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new CardAdapter(getContext(),list));
     }
 
 
@@ -467,7 +406,7 @@ public class RatActivity extends AppCompatActivity {
         });
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(v);
         alertaCalendar = builder.create();
         alertaCalendar.show();
@@ -498,7 +437,7 @@ public class RatActivity extends AppCompatActivity {
         private void alert_opcoes_card(final String idP, final String nrRatP, final String dtInicialP, final String dtFinalP, final String tipoP) {
 //            View viewOpcoesCard = getLayoutInflater().inflate(R.layout.card_opcoes,null);
 //
-//            viewOpcoesCard.findViewById(R.id.bttEditarOpcoesCard).setOnClickListener(new View.OnClickListener() {
+//            viewOpcoesCard.view.findViewById(R.id.bttEditarOpcoesCard).setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v){
 //                    adicionarRegistro(idP, nrRatP, dtInicialP, dtFinalP, tipoP);
@@ -506,7 +445,7 @@ public class RatActivity extends AppCompatActivity {
 //                }
 //            });
 //
-//            viewOpcoesCard.findViewById(R.id.bttExcluirOpcoesCard).setOnClickListener(new View.OnClickListener() {
+//            viewOpcoesCard.view.findViewById(R.id.bttExcluirOpcoesCard).setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v){
 //                    dml.delete(Rats.TABELA, Rats.ID +"="+idP);
@@ -522,17 +461,17 @@ public class RatActivity extends AppCompatActivity {
 //            alertRat.show();
 
 
-            new FancyAlertDialog.Builder(RatActivity.this)
+            new AlertDynamic.Builder(getContext())
                     .setTitle(getString(R.string.escolhaUmaOpcao))
                     .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
                     .setPositiveBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))  //Don't pass R.color.colorvalue
                     .setPositiveBtnText(getString(R.string.excluir))
                     .setNegativeBtnText(getString(R.string.editar))
                     .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
-                    .setAnimation(Animation.POP)
+                    .setAnimation(AlertDynamic.Animation.POP)
                     .isCancellable(true)
-                    .setIcon(R.drawable.ic_error_outline_white_24dp, Icon.Visible)
-                    .OnPositiveClicked(new FancyAlertDialogListener() {
+                    .setIcon(R.drawable.ic_error_outline_white_24dp, AlertDynamic.Icon.Visible)
+                    .OnPositiveClicked(new AlertDynamic.AlertDynamicDialogListener() {
                         @Override
                         public void OnClick() {
                             // ACAO EXCLUIR
@@ -541,7 +480,7 @@ public class RatActivity extends AppCompatActivity {
                             new SnackBar(getString(R.string.registroExcluido), linearFiltro, Snackbar.LENGTH_LONG);
                         }
                     })
-                    .OnNegativeClicked(new FancyAlertDialogListener() {
+                    .OnNegativeClicked(new AlertDynamic.AlertDynamicDialogListener() {
                         @Override
                         public void OnClick() {
                             // ACAO EDITAR
@@ -596,10 +535,10 @@ public class RatActivity extends AppCompatActivity {
             viewHolder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent it = new Intent(RatActivity.this, RatItemActivity.class);
+                    Intent it = new Intent(getContext(), RatItemActivity.class);
                     it.putExtra("rat", obj);
                     startActivity(it);
-                    finish();
+//                    finish();
                 }
             });
 

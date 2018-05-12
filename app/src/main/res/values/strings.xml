@@ -71,4 +71,7 @@
     <string name="cadastro">Cadastro</string>
     <string name="gvItem">GV / Item</string>
     <string name="ratItem">RAT / Item</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

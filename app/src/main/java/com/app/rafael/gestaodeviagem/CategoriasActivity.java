@@ -2,7 +2,6 @@ package com.app.rafael.gestaodeviagem;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,14 +9,13 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -31,90 +29,48 @@ import com.app.rafael.gestaodeviagem.db.Dml;
 import com.app.rafael.gestaodeviagem.db.tabelas.Categorias;
 import com.app.rafael.gestaodeviagem.entidades.Categoria;
 import com.app.rafael.gestaodeviagem.entidades.TipoCategoria;
+import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic;
+import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic.*;
 import com.app.rafael.gestaodeviagem.utilidades.RegraCampo;
 import com.app.rafael.gestaodeviagem.utilidades.SnackBar;
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriasActivity extends AppCompatActivity {
+public class CategoriasActivity extends Fragment {
 
     private FloatingActionButton btnAdicionar;
-    private AlertDialog alertCategoria;
     private RecyclerView recyclerView;
     private Dml lancamentoDao;
-    private Toolbar toolbar;
-    private TextView toolbarTxtTitle;
     private LinearLayout categoriaLinear;
+    private View view;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_categorias);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_categorias, container, false);
         inicialise();
-        ajusteToolbar();
         botoes();
         carregarCard();
+        return view;
 
     }
 
+
     private void Vibrar(){
-        Vibrator rr = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator rr = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
         long milliseconds = 50;//'30' é o tempo em milissegundos, é basicamente o tempo de duração da vibração. portanto, quanto maior este numero, mais tempo de vibração você irá ter
         rr.vibrate(milliseconds);
     }
 
     public void inicialise(){
-        lancamentoDao = new Dml(CategoriasActivity.this);
-        btnAdicionar = (FloatingActionButton)findViewById(R.id.bttAddCategoria);
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerViewCategorias);
-        toolbar = (Toolbar) findViewById(R.id.categoriaEdtToolbar);
-        toolbarTxtTitle = (TextView)findViewById(R.id.categoriaTxtTitle);
-        categoriaLinear = (LinearLayout) findViewById(R.id.categoriaLinear);
+        lancamentoDao = new Dml(getContext());
+        btnAdicionar = (FloatingActionButton)view.findViewById(R.id.bttAddCategoria);
+        recyclerView = (RecyclerView)view.findViewById(R.id.recyclerViewCategorias);
+        categoriaLinear = (LinearLayout)view.findViewById(R.id.categoriaLinear);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (item.getItemId() == android.R.id.home) {
-            Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivityForResult(myIntent, 0);
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void ajusteToolbar(){
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        toolbar.postDelayed(new Runnable()
-        {
-            @Override
-            public void run ()
-            {
-                int maxWidth = toolbar.getWidth();
-                int titleWidth = toolbarTxtTitle.getWidth();
-                int iconWidth = maxWidth - titleWidth;
-
-                if (iconWidth > 0)
-                {
-                    int width = maxWidth - iconWidth * 2;
-                    toolbarTxtTitle.setMinimumWidth(width);
-                    toolbarTxtTitle.getLayoutParams().width = width;
-                }
-            }
-        }, 0);
-    }
 
     public void botoes(){
         btnAdicionar.setOnClickListener(new View.OnClickListener() {
@@ -139,15 +95,6 @@ public class CategoriasActivity extends AppCompatActivity {
 
     }
 
-
-    @Override
-    public void onBackPressed(){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(myIntent, 0);
-        finish();
-    }
-
-
     public void adicionarCategoria(final String idP, final String descricaoP, final String TipoP){
 
         final EditText edtDescricao;
@@ -157,7 +104,7 @@ public class CategoriasActivity extends AppCompatActivity {
         final AlertDialog alert;
 
         viewInserirCategoria = getLayoutInflater().inflate(R.layout.inserir_categoria, null);
-        builder = new AlertDialog.Builder(this);
+        builder = new AlertDialog.Builder(getContext());
         builder.setView(viewInserirCategoria);
         alert = builder.create();
         alert.setCanceledOnTouchOutside(true);
@@ -169,7 +116,7 @@ public class CategoriasActivity extends AppCompatActivity {
 
         spnTipo = (Spinner)viewInserirCategoria.findViewById(R.id.spnTipoCategoria);
         ArrayAdapter<TipoCategoria> spinnerArrayAdapter = new ArrayAdapter<TipoCategoria>(
-                this,R.layout.spinner_item,TipoCategoria.values());
+                getContext(),R.layout.spinner_item,TipoCategoria.values());
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown);
         spnTipo.setAdapter(spinnerArrayAdapter);
 
@@ -180,7 +127,7 @@ public class CategoriasActivity extends AppCompatActivity {
         viewInserirCategoria.findViewById(R.id.bttSalvarCategoria).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(RegraCampo.obrigatorio(edtDescricao, getApplicationContext())){
+                if(RegraCampo.obrigatorio(edtDescricao, getContext())){
 
                     //Inclui no banco
                     ContentValues valores;
@@ -233,13 +180,13 @@ public class CategoriasActivity extends AppCompatActivity {
                 }
 
             }else{
-                Toast.makeText(getApplicationContext(), getString(R.string.nenhumRegistro),
+                Toast.makeText(getContext(), getString(R.string.nenhumRegistro),
                         Toast.LENGTH_SHORT).show();
             }
         }
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new CardAdapter(CategoriasActivity.this,list));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new CardAdapter(getContext(), list));
     }
 
 
@@ -269,17 +216,17 @@ public class CategoriasActivity extends AppCompatActivity {
 
         private void alert_opcoes_card(final String idP, final String descricaoP, final String tipoP) {
 
-            new FancyAlertDialog.Builder(CategoriasActivity.this)
+                new AlertDynamic.Builder(getContext())
                     .setTitle(getString(R.string.escolhaUmaOpcao))
                     .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
                     .setPositiveBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))  //Don't pass R.color.colorvalue
                     .setPositiveBtnText(getString(R.string.excluir))
                     .setNegativeBtnText(getString(R.string.editar))
                     .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
-                    .setAnimation(Animation.POP)
+                    .setAnimation(AlertDynamic.Animation.POP)
                     .isCancellable(true)
-                    .setIcon(R.drawable.ic_error_outline_white_24dp, Icon.Visible)
-                    .OnPositiveClicked(new FancyAlertDialogListener() {
+                    .setIcon(R.drawable.ic_error_outline_white_24dp, AlertDynamic.Icon.Visible)
+                    .OnPositiveClicked(new AlertDynamicDialogListener(){
                         @Override
                         public void OnClick() {
                             lancamentoDao.delete(Categorias.TABELA, Categorias.ID +"="+idP);
@@ -287,7 +234,7 @@ public class CategoriasActivity extends AppCompatActivity {
                             new SnackBar(getString(R.string.registroExcluido), categoriaLinear, Snackbar.LENGTH_LONG);
                         }
                     })
-                    .OnNegativeClicked(new FancyAlertDialogListener() {
+                    .OnNegativeClicked(new AlertDynamicDialogListener() {
                         @Override
                         public void OnClick() {
                             adicionarCategoria(idP, descricaoP, tipoP);
@@ -296,7 +243,6 @@ public class CategoriasActivity extends AppCompatActivity {
                     .build();
 
         }
-
 
 
         private Context getContext() {

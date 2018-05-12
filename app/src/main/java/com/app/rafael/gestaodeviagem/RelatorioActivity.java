@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -48,13 +49,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-
-public class RelatorioActivity extends AppCompatActivity {
-
-    private Toolbar toolbar;
-    private TextView toolbarTxtTitle, relTxtTotal;
+public class RelatorioActivity extends Fragment{
+    private TextView relTxtTotal;
     private AnimateCheckBox relCkeckGv, relCkeckRat;
-    private LinearLayout linearRat, linearGv, relLinearReceita, relLinearFiltros;
+    private LinearLayout linearRat, linearGv, relLinearReceita;
     private Spinner relSpnTipo, relSpnCatGv, relSpnStatus;
     private Dml dml;
     private EditText edtDtInicial, edtDtFinal;
@@ -62,45 +60,45 @@ public class RelatorioActivity extends AppCompatActivity {
     private Calendar calendar;
     private Integer diaCalendar, mesCalendar, anoCalendar;
     private String dataCalendar;
-    private ImageView imgFiltro, imgOrder;
+    private ImageView imgOrder;
     private RecyclerView recyclerView;
+    private View view;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_relatorio);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_relatorio, container, false);
 
         inicialise();
-        ajusteToolbar();
         botoes();
         gerarSpinnerPadrao();
         carregarCard();
+        return view;
+
     }
 
+
     public void inicialise(){
-        toolbar = (Toolbar) findViewById(R.id.relatorioToolbar);
-        toolbarTxtTitle = (TextView)findViewById(R.id.relatorioToolbarTxtTitle);
-        relTxtTotal = (TextView)findViewById(R.id.relTxtTotal);
-        relCkeckGv = (AnimateCheckBox)findViewById(R.id.relCkeckGv);
+        relTxtTotal = (TextView)view.findViewById(R.id.relTxtTotal);
+        relCkeckGv = (AnimateCheckBox)view.findViewById(R.id.relCkeckGv);
         relCkeckGv.setChecked(true);
-        relCkeckRat = (AnimateCheckBox)findViewById(R.id.relCkeckRat);
+        relCkeckRat = (AnimateCheckBox)view.findViewById(R.id.relCkeckRat);
         relCkeckRat.setChecked(true);
-        linearGv = (LinearLayout)findViewById(R.id.relLinearGv);
-        linearRat = (LinearLayout)findViewById(R.id.relLinearRat);
-        relLinearReceita = (LinearLayout)findViewById(R.id.relLinearReceita);
-        relLinearFiltros = (LinearLayout)findViewById(R.id.relLinearFiltros);
-        relSpnTipo = (Spinner)findViewById(R.id.relSpnTipo);
-        relSpnCatGv = (Spinner)findViewById(R.id.relSpnCatGv);
-        relSpnStatus = (Spinner)findViewById(R.id.relSpnStatus);
-        dml = new Dml(RelatorioActivity.this);
-        edtDtInicial = (EditText)findViewById(R.id.relEdtDtInicial);
+        linearGv = (LinearLayout)view.findViewById(R.id.relLinearGv);
+        linearRat = (LinearLayout)view.findViewById(R.id.relLinearRat);
+        relLinearReceita = (LinearLayout)view.findViewById(R.id.relLinearReceita);
+        relSpnTipo = (Spinner)view.findViewById(R.id.relSpnTipo);
+        relSpnCatGv = (Spinner)view.findViewById(R.id.relSpnCatGv);
+        relSpnStatus = (Spinner)view.findViewById(R.id.relSpnStatus);
+        dml = new Dml(getContext());
+        edtDtInicial = (EditText)view.findViewById(R.id.relEdtDtInicial);
         edtDtInicial.setText(GetDate.today(true,-1,0).toString());
-        edtDtFinal = (EditText)findViewById(R.id.relEdtDtFinal);
+        edtDtFinal = (EditText)view.findViewById(R.id.relEdtDtFinal);
         edtDtFinal.setText(GetDate.today(false,0,0).toString());
         calendar = Calendar.getInstance();
-        imgFiltro = (ImageView)findViewById(R.id.relImgFiltro);
-        imgOrder = (ImageView)findViewById(R.id.relImgOrder);
-        recyclerView = (RecyclerView)findViewById(R.id.relRecyclerView);
+        imgOrder = (ImageView)view.findViewById(R.id.relImgOrder);
+        recyclerView = (RecyclerView)view.findViewById(R.id.relRecyclerView);
     }
 
 
@@ -110,7 +108,7 @@ public class RelatorioActivity extends AppCompatActivity {
             add("Despesa");
         }});
 
-        ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(this,R.layout.spinner_item_filter, Status.values());
+        ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(getContext(),R.layout.spinner_item_filter, Status.values());
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown);
         relSpnStatus.setAdapter(spinnerArrayAdapter);
         relSpnStatus.setSelection(0);
@@ -183,48 +181,12 @@ public class RelatorioActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (item.getItemId() == android.R.id.home) {
-            Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivityForResult(myIntent, 0);
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
     public void montaAdapterSpinner(Spinner spinnger, ArrayList list){
-        ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(this,R.layout.spinner_item_filter, list);
+        ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(getContext(), R.layout.spinner_item_filter, list);
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown);
         spinnger.setAdapter(spinnerArrayAdapter);
     }
 
-
-    public void ajusteToolbar(){
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        toolbar.postDelayed(new Runnable()
-        {
-            @Override
-            public void run ()
-            {
-                int maxWidth = toolbar.getWidth();
-                int titleWidth = toolbarTxtTitle.getWidth();
-                int iconWidth = maxWidth - titleWidth;
-
-                if (iconWidth > 0)
-                {
-                    int width = maxWidth - iconWidth * 2;
-                    toolbarTxtTitle.setMinimumWidth(width);
-                    toolbarTxtTitle.getLayoutParams().width = width;
-                }
-            }
-        }, 0);
-    }
 
     public void botoes(){
         linearGv.setOnClickListener(new View.OnClickListener() {
@@ -353,17 +315,6 @@ public class RelatorioActivity extends AppCompatActivity {
             }
         });
 
-        imgFiltro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (relLinearFiltros.getVisibility() == View.GONE){
-                    relLinearFiltros.setVisibility(View.VISIBLE);
-                }else{
-                    relLinearFiltros.setVisibility(View.GONE);
-                }
-            }
-        });
-
         imgOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -418,24 +369,18 @@ public class RelatorioActivity extends AppCompatActivity {
         });
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(v);
         alertaCalendar = builder.create();
         alertaCalendar.show();
     }
 
 
-    @Override
-    public void onBackPressed(){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(myIntent, 0);
-        finish();
-    }
 
     public void carregarCard(){
 
         if(!compareDate(edtDtInicial.getText().toString(), edtDtFinal.getText().toString())){
-            Alert a = new Alert(RelatorioActivity.this, getString(R.string.atencao),"A data inicial não pode ser superior a data final!");
+            Alert a = new Alert(getContext(), getString(R.string.atencao),"A data inicial não pode ser superior a data final!");
             return;
         }
 
@@ -524,8 +469,8 @@ public class RelatorioActivity extends AppCompatActivity {
         }
 
         relTxtTotal.setText("R$ " + FormatNumber.numToString(total,"###,###,##0.00"));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new CardAdapter(RelatorioActivity.this, list));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new CardAdapter(getContext(), list));
 
     }
 
@@ -738,5 +683,8 @@ public class RelatorioActivity extends AppCompatActivity {
         }
     }
 
+    public interface AtualizaIconeFiltro{
+        public void esconder();
+    }
 
 }

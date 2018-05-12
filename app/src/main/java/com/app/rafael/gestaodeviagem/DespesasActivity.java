@@ -12,6 +12,7 @@ import android.os.Vibrator;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -37,53 +38,48 @@ import com.app.rafael.gestaodeviagem.entidades.Categoria;
 import com.app.rafael.gestaodeviagem.entidades.GestaoDeViagemItem;
 import com.app.rafael.gestaodeviagem.entidades.TipoCategoria;
 import com.app.rafael.gestaodeviagem.utilidades.Alert;
+import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic;
 import com.app.rafael.gestaodeviagem.utilidades.ConverterDate;
 import com.app.rafael.gestaodeviagem.utilidades.RegraCampo;
 import com.app.rafael.gestaodeviagem.utilidades.SnackBar;
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class DespesasActivity extends AppCompatActivity {
+public class DespesasActivity extends Fragment {
 
     private Intent intent;
     private FloatingActionButton btnAdicionar;
-    private AlertDialog alertDespesa, alertaCalendar, alertAlimentacao;
+    private AlertDialog alertDespesa, alertaCalendar;
     private RecyclerView recyclerView;
     private Integer diaCalendar, mesCalendar, anoCalendar;
     private String dataCalendar;
-    private TextView toolbarTxtTitle, txtData, txtValor;
+    private TextView txtData, txtValor;
     private Calendar calendar;
-    private Toolbar toolbar;
     private Dml dml;
     private CoordinatorLayout despesaCoordinator;
+    private View view;
     
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_despesas);
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_despesas, container, false);
         inicialise();
-        ajusteToolbar();
         botoes();
         carregarCard();
+        return view;
 
     }
-
     
     public void inicialise(){
-        dml = new Dml(DespesasActivity.this);
-        btnAdicionar = (FloatingActionButton)findViewById(R.id.despesaBttAdd);
-        recyclerView = (RecyclerView)findViewById(R.id.despesaRecyclerView);
-        toolbarTxtTitle = (TextView) findViewById(R.id.despesaTxtTitle);
+        dml = new Dml(getContext());
+        btnAdicionar = (FloatingActionButton)view.findViewById(R.id.despesaBttAdd);
+        recyclerView = (RecyclerView)view.findViewById(R.id.despesaRecyclerView);
         calendar = Calendar.getInstance();
-        toolbar = (Toolbar) findViewById(R.id.despesaToolbar);
-        despesaCoordinator = (CoordinatorLayout) findViewById(R.id.despesaCoordinator);
+        despesaCoordinator = (CoordinatorLayout) view.findViewById(R.id.despesaCoordinator);
     }
     
     
@@ -109,56 +105,10 @@ public class DespesasActivity extends AppCompatActivity {
     }
 
 
-    public void ajusteToolbar(){
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        toolbar.postDelayed(new Runnable()
-        {
-            @Override
-            public void run ()
-            {
-                int maxWidth = toolbar.getWidth();
-                int titleWidth = toolbarTxtTitle.getWidth();
-                int iconWidth = maxWidth - titleWidth;
-
-                if (iconWidth > 0)
-                {
-                    int width = maxWidth - iconWidth * 2;
-                    toolbarTxtTitle.setMinimumWidth(width);
-                    toolbarTxtTitle.getLayoutParams().width = width;
-                }
-            }
-        }, 0);
-    }
-    
-
     private void Vibrar(){
-        Vibrator rr = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator rr = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
         long milliseconds = 50;
         rr.vibrate(milliseconds);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == android.R.id.home) {
-            Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivityForResult(myIntent, 0);
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onBackPressed(){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(myIntent, 0);
-        finish();
     }
 
 
@@ -186,7 +136,7 @@ public class DespesasActivity extends AppCompatActivity {
 
     
     public void montaAdapterSpinner(Spinner spinnger, ArrayList list){
-        ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(this,R.layout.spinner_item, list);
+        ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(getContext(), R.layout.spinner_item, list);
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown);
         spinnger.setAdapter(spinnerArrayAdapter);
     }
@@ -202,7 +152,7 @@ public class DespesasActivity extends AppCompatActivity {
         final TextView txtTitulo;
 
         viewInserirDespesa = getLayoutInflater().inflate(R.layout.inserir_gv_item, null);
-        builder = new AlertDialog.Builder(this);
+        builder = new AlertDialog.Builder(getContext());
         builder.setView(viewInserirDespesa);
         alert = builder.create();
         alert.setCanceledOnTouchOutside(true);
@@ -241,7 +191,7 @@ public class DespesasActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 obterDataCalendar(edtDtLancamento);
-                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
+                ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                         .hideSoftInputFromWindow(viewInserirDespesa.findViewById(R.id.gvItemInserirEdtData).getWindowToken(), 0);
             }
         });
@@ -250,9 +200,9 @@ public class DespesasActivity extends AppCompatActivity {
         viewInserirDespesa.findViewById(R.id.gvItemInserirBttSalvar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(RegraCampo.obrigatorio(spnCategoria, getApplicationContext())){
-                    if(RegraCampo.obrigatorio(edtDtLancamento, getApplicationContext())){
-                        if(RegraCampo.obrigatorio(edtValor, getApplicationContext())){
+                if(RegraCampo.obrigatorio(spnCategoria, getContext())){
+                    if(RegraCampo.obrigatorio(edtDtLancamento, getContext())){
+                        if(RegraCampo.obrigatorio(edtValor, getContext())){
 
                             Categoria spnSelecionado = ((Categoria)spnCategoria.getSelectedItem());
                             //Inclui no banco
@@ -313,7 +263,7 @@ public class DespesasActivity extends AppCompatActivity {
                 }
 
             }else{
-                Toast.makeText(getApplicationContext(), getString(R.string.nenhumRegistro),
+                Toast.makeText(getContext(), getString(R.string.nenhumRegistro),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -321,8 +271,8 @@ public class DespesasActivity extends AppCompatActivity {
         if(btnAdicionar.getVisibility() == View.GONE)
             btnAdicionar.show();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new DespesasActivity.CardAdapter(DespesasActivity.this,list));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new DespesasActivity.CardAdapter(getContext(),list));
 
     }
 
@@ -375,7 +325,7 @@ public class DespesasActivity extends AppCompatActivity {
         });
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(v);
         alertaCalendar = builder.create();
         alertaCalendar.show();
@@ -408,17 +358,17 @@ public class DespesasActivity extends AppCompatActivity {
 
         private void alert_opcoes_card(final String idP, final String categoriaP, final String dataP, final String valorP, final String observacaoP) {
 
-            new FancyAlertDialog.Builder(DespesasActivity.this)
+            new AlertDynamic.Builder(getContext())
                     .setTitle(getString(R.string.escolhaUmaOpcao))
                     .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
                     .setPositiveBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))  //Don't pass R.color.colorvalue
                     .setPositiveBtnText(getString(R.string.excluir))
                     .setNegativeBtnText(getString(R.string.editar))
                     .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
-                    .setAnimation(Animation.POP)
+                    .setAnimation(AlertDynamic.Animation.POP)
                     .isCancellable(true)
-                    .setIcon(R.drawable.ic_error_outline_white_24dp, Icon.Visible)
-                    .OnPositiveClicked(new FancyAlertDialogListener() {
+                    .setIcon(R.drawable.ic_error_outline_white_24dp, AlertDynamic.Icon.Visible)
+                    .OnPositiveClicked(new AlertDynamic.AlertDynamicDialogListener() {
                         @Override
                         public void OnClick() {
                             // ACAO EXCLUIR
@@ -427,7 +377,7 @@ public class DespesasActivity extends AppCompatActivity {
                             new SnackBar(getString(R.string.registroExcluido), despesaCoordinator, Snackbar.LENGTH_LONG);
                         }
                     })
-                    .OnNegativeClicked(new FancyAlertDialogListener() {
+                    .OnNegativeClicked(new AlertDynamic.AlertDynamicDialogListener() {
                         @Override
                         public void OnClick() {
                             // ACAO EDITAR
