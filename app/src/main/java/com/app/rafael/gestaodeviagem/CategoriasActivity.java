@@ -29,6 +29,7 @@ import com.app.rafael.gestaodeviagem.db.Dml;
 import com.app.rafael.gestaodeviagem.db.tabelas.Categorias;
 import com.app.rafael.gestaodeviagem.entidades.Categoria;
 import com.app.rafael.gestaodeviagem.entidades.TipoCategoria;
+import com.app.rafael.gestaodeviagem.utilidades.Alert;
 import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic;
 import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic.*;
 import com.app.rafael.gestaodeviagem.utilidades.RegraCampo;
@@ -215,32 +216,36 @@ public class CategoriasActivity extends Fragment {
 
 
         private void alert_opcoes_card(final String idP, final String descricaoP, final String tipoP) {
+            if(Integer.parseInt(idP)<=3) {
+                Toast.makeText(getContext(), "Não é possível alterar item padrão!", Toast.LENGTH_LONG).show();
+                return;
+            }
 
-                new AlertDynamic.Builder(getContext())
-                    .setTitle(getString(R.string.escolhaUmaOpcao))
-                    .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
-                    .setPositiveBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))  //Don't pass R.color.colorvalue
-                    .setPositiveBtnText(getString(R.string.excluir))
-                    .setNegativeBtnText(getString(R.string.editar))
-                    .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
-                    .setAnimation(AlertDynamic.Animation.POP)
-                    .isCancellable(true)
-                    .setIcon(R.drawable.ic_error_outline_white_24dp, AlertDynamic.Icon.Visible)
-                    .OnPositiveClicked(new AlertDynamicDialogListener(){
-                        @Override
-                        public void OnClick() {
-                            lancamentoDao.delete(Categorias.TABELA, Categorias.ID +"="+idP);
-                            carregarCard();
-                            new SnackBar(getString(R.string.registroExcluido), categoriaLinear, Snackbar.LENGTH_LONG);
-                        }
-                    })
-                    .OnNegativeClicked(new AlertDynamicDialogListener() {
-                        @Override
-                        public void OnClick() {
-                            adicionarCategoria(idP, descricaoP, tipoP);
-                        }
-                    })
-                    .build();
+            new AlertDynamic.Builder(getContext())
+                .setTitle(getString(R.string.escolhaUmaOpcao))
+                .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
+                .setPositiveBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText(getString(R.string.excluir))
+                .setNegativeBtnText(getString(R.string.editar))
+                .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
+                .setAnimation(AlertDynamic.Animation.POP)
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_error_outline_white_24dp, AlertDynamic.Icon.Visible)
+                .OnPositiveClicked(new AlertDynamicDialogListener(){
+                    @Override
+                    public void OnClick() {
+                        lancamentoDao.delete(Categorias.TABELA, Categorias.ID +"="+idP);
+                        carregarCard();
+                        new SnackBar(getString(R.string.registroExcluido), categoriaLinear, Snackbar.LENGTH_LONG);
+                    }
+                })
+                .OnNegativeClicked(new AlertDynamicDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        adicionarCategoria(idP, descricaoP, tipoP);
+                    }
+                })
+                .build();
 
         }
 

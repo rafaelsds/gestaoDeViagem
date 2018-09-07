@@ -42,6 +42,7 @@ import com.app.rafael.gestaodeviagem.entidades.RatItem;
 import com.app.rafael.gestaodeviagem.utilidades.Alert;
 import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic;
 import com.app.rafael.gestaodeviagem.utilidades.ConverterDate;
+import com.app.rafael.gestaodeviagem.utilidades.GetDate;
 import com.app.rafael.gestaodeviagem.utilidades.RegraCampo;
 import com.app.rafael.gestaodeviagem.utilidades.SnackBar;
 
@@ -114,7 +115,7 @@ public class RatItemActivity extends AppCompatActivity {
         btnAdicionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarRegistro("","","");
+                adicionarRegistro("", GetDate.today(),"");
             }
         });
 

@@ -19,6 +19,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.app.rafael.gestaodeviagem.db.Dml;
+import com.app.rafael.gestaodeviagem.db.tabelas.Categorias;
 import com.app.rafael.gestaodeviagem.db.tabelas.Configuracoes;
 import com.app.rafael.gestaodeviagem.utilidades.Alert;
 import com.app.rafael.gestaodeviagem.utilidades.System;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_v3);
 //        overridePendingTransition(R.anim.activity_open_left_to_right_begin, R.anim.activity_open_left_to_right_end);
         inicialise();
+        insertPadrao();
         botoes();
         ajusteToolbar(getString(R.string.gestaoDeViagem));
     }
@@ -59,16 +61,6 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setItemIconTintList(null);
         imgFiltro =(ImageView)findViewById(R.id.imgFiltro);
         dml = new Dml(MainActivity.this);
-
-        if(dml.getCount(Configuracoes.TABELA)<=0){
-            //Faz o insert padrão de configuração
-            ContentValues valores;
-            valores = new ContentValues();
-            valores.put("vl_rat", "0");
-            valores.put("vl_alimentacao", "0");
-            dml.insert(Configuracoes.TABELA, valores);
-        }
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -80,6 +72,34 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.content_frame, fragment)
                 .commit();
 
+    }
+
+    public void insertPadrao(){
+        if(dml.getCount(Configuracoes.TABELA)<=0){
+            //Faz o insert padrão de configuração
+            ContentValues valores;
+            valores = new ContentValues();
+            valores.put(Configuracoes.VLRAT, "50");
+            valores.put(Configuracoes.VLALIMENTACAO, "59");
+            dml.insert(Configuracoes.TABELA, valores);
+        }
+        if(dml.getCount(Categorias.TABELA)<=0){
+            //Faz o insert padrão de configuração
+            ContentValues valores;
+            valores = new ContentValues();
+
+            valores.put(Categorias.DESCRICAO, "Uber");
+            valores.put(Categorias.TIPO, "0");
+            dml.insert(Categorias.TABELA, valores);
+
+            valores.put(Categorias.DESCRICAO, "Alimentação");
+            valores.put(Categorias.TIPO, "0");
+            dml.insert(Categorias.TABELA, valores);
+
+            valores.put(Categorias.DESCRICAO, "Almoço");
+            valores.put(Categorias.TIPO, "1");
+            dml.insert(Categorias.TABELA, valores);
+        }
     }
 
     public void botoes(){
@@ -121,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new DespesasActivity();
                         fragmentTransaction = true;
                         toolbarTitle.setText(getString(R.string.despesas));
+                        imgFiltro.setVisibility(View.VISIBLE);
                         break;
 
                     case R.id.nav_gv:
@@ -128,6 +149,12 @@ public class MainActivity extends AppCompatActivity {
                         fragmentTransaction = true;
                         toolbarTitle.setText(getString(R.string.gv));
                         imgFiltro.setVisibility(View.VISIBLE);
+                        break;
+
+                    case R.id.nav_home:
+                        fragment = new HomeActivity();
+                        fragmentTransaction = true;
+                        toolbarTitle.setText(getString(R.string.home));
                         break;
                 }
 
@@ -171,6 +198,15 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_gv:
                         linear=(LinearLayout)findViewById(R.id.GvLinearFiltro);
+                        if (linear.getVisibility() == View.GONE){
+                            linear.setVisibility(View.VISIBLE);
+                        }else{
+                            linear.setVisibility(View.GONE);
+                        }
+                        break;
+
+                    case R.id.nav_despesas:
+                        linear=(LinearLayout)findViewById(R.id.DespesaLinearFiltro);
                         if (linear.getVisibility() == View.GONE){
                             linear.setVisibility(View.VISIBLE);
                         }else{

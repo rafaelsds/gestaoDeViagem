@@ -53,7 +53,6 @@ public class AlertDynamic {
         private String message;
         private String positiveBtnText;
         private String negativeBtnText;
-        private Fragment fragment;
         private int icon;
         private Icon visibility;
         private Animation animation;

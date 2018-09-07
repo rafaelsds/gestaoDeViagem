@@ -50,7 +50,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class RelatorioActivity extends Fragment{
-    private TextView relTxtTotal;
+    private TextView relTxtTotal,relTxtHoras;
     private AnimateCheckBox relCkeckGv, relCkeckRat;
     private LinearLayout linearRat, linearGv, relLinearReceita;
     private Spinner relSpnTipo, relSpnCatGv, relSpnStatus;
@@ -81,6 +81,7 @@ public class RelatorioActivity extends Fragment{
 
     public void inicialise(){
         relTxtTotal = (TextView)view.findViewById(R.id.relTxtTotal);
+        relTxtHoras = (TextView)view.findViewById(R.id.relTxtHoras);
         relCkeckGv = (AnimateCheckBox)view.findViewById(R.id.relCkeckGv);
         relCkeckGv.setChecked(true);
         relCkeckRat = (AnimateCheckBox)view.findViewById(R.id.relCkeckRat);
@@ -410,6 +411,22 @@ public class RelatorioActivity extends Fragment{
 
                     Cursor cursor = dml.getAll(tabela[0], atributos, clausulas[0], valorClausulas, ordem[0], agrupamento[0]);
                     list = montaList(cursor, list);
+
+                    String[] atributoHora = getSqlCarregarCard("RAT", "COLUMNHORA");
+                    Cursor cursorHora = dml.getAll(tabela[0], atributoHora, clausulas[0], valorClausulas, ordem[0], null);
+
+                    String valor="0";
+
+                    if(cursorHora!=null){
+                        cursorHora.moveToFirst();
+                        if(cursorHora.getString(cursorHora.getColumnIndexOrThrow("horas"))!=null)
+                            valor= cursorHora.getString(cursorHora.getColumnIndexOrThrow("horas"));
+                    }
+
+                    relTxtHoras.setText("Horas: "+valor);
+
+                }else{
+                    relTxtHoras.setText("");
                 }
                 break;
 
@@ -525,6 +542,10 @@ public class RelatorioActivity extends Fragment{
                     return new String[]{"sum("+ RatsItens.VALOR+")as valor, " +
                             "avg("+RatsItens.VALOR+")as media, "+
                             "'Rat ' ||"+Rats.NRRAT +" as ds"
+                    };
+
+                if(tipoRetornoP.equals("COLUMNHORA"))
+                    return new String[]{"sum("+ RatsItens.HORAS+")as horas "
                     };
 
                 if(tipoRetornoP.equals("TABLE"))

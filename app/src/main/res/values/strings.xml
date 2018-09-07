@@ -2,6 +2,8 @@
     <string name="app_name">Gestao de Viagem</string>
     <string name="gestaoDeViagem">Gestão de Viagem</string>
     <string name="adicionarReceita">Adicionar Receita</string>
+    <string name="receita">Receita</string>
+    <string name="resultado">Resultado</string>
     <string name="adicionarDespesa">Adicionar Despesa</string>
     <string name="despesas">Despesas</string>
     <string name="despesa">Despesa</string>
@@ -71,7 +73,9 @@
     <string name="cadastro">Cadastro</string>
     <string name="gvItem">GV / Item</string>
     <string name="ratItem">RAT / Item</string>
-
+    <string name="home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="desejaGerarAlimentacao">Deseja Gerar Alimentação Padrão do Período?</string>
+    <string name="desejaExcluirAlimentacao">Deseja Excluir Todos os Itens do Período?</string>
 </resources>

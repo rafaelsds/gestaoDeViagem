@@ -137,58 +137,57 @@ public class GestaoDeViagemItemActivity extends AppCompatActivity {
     }
 
     public void excluirItens(){
-        lancamentoDao.delete(GestaoDeViagensItens.TABELA, GestaoDeViagensItens.IDGV +"="+gv.getId());
-        carregarCard();
+        new AlertDynamic.Builder(GestaoDeViagemItemActivity.this)
+                .setTitle(getString(R.string.desejaExcluirAlimentacao))
+                .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
+                .setPositiveBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText(getString(R.string.nao))
+                .setNegativeBtnText(getString(R.string.sim))
+                .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
+                .setAnimation(AlertDynamic.Animation.POP)
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_error_outline_white_24dp, AlertDynamic.Icon.Visible)
+                .OnNegativeClicked(new AlertDynamic.AlertDynamicDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        lancamentoDao.delete(GestaoDeViagensItens.TABELA, GestaoDeViagensItens.IDGV +"="+gv.getId());
+                        carregarCard();
+                    }
+                })
+                .build();
     }
 
     public void gerarAlimentacaoPadrao(){
-        final Spinner spnCategoria;
-        View v;
-        AlertDialog.Builder builder;
+        new AlertDynamic.Builder(GestaoDeViagemItemActivity.this)
+                .setTitle(getString(R.string.desejaGerarAlimentacao))
+                .setBackgroundColor(Color.parseColor(getResources().getString(0+R.color.greyDark)))
+                .setPositiveBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText(getString(R.string.nao))
+                .setNegativeBtnText(getString(R.string.sim))
+                .setNegativeBtnBackground(Color.parseColor(getResources().getString(0+R.color.greyDark)))
+                .setAnimation(AlertDynamic.Animation.POP)
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_error_outline_white_24dp, AlertDynamic.Icon.Visible)
+                .OnNegativeClicked(new AlertDynamic.AlertDynamicDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        //Inclui no banco
+                        ContentValues valores;
+                        valores = new ContentValues();
+                        valores.put(GestaoDeViagensItens.IDGV, gv.getId().toString());
+                        valores.put(GestaoDeViagensItens.VALOR, lancamentoDao.getItem(Configuracoes.TABELA, Configuracoes.VLALIMENTACAO, "1=1"));
+                        valores.put(GestaoDeViagensItens.CATEGORIA, "2");
 
-        v = getLayoutInflater().inflate(R.layout.inserir_gv_item_alimentacao, null);
-        builder = new AlertDialog.Builder(this);
-        builder.setView(v);
-        alertAlimentacao = builder.create();
-        alertAlimentacao.getWindow().getAttributes().windowAnimations = R.style.AnimationTopRightDiagonal;
-
-        spnCategoria = (Spinner) v.findViewById(R.id.gvItemInserirAlimentSpnCategor);
-        ArrayList<Categoria> list = obterCategoriaDb();
-        montaAdapterSpinner(spnCategoria, list);
-
-        v.findViewById(R.id.gvItemInserirAlimentBttCancelar).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertAlimentacao.dismiss();
-            }
-        });
-
-        v.findViewById(R.id.gvItemInserirAlimentBttSalvar).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-
-                Categoria spnSelecionado = ((Categoria)spnCategoria.getSelectedItem());
-                //Inclui no banco
-                ContentValues valores;
-                valores = new ContentValues();
-                valores.put(GestaoDeViagensItens.IDGV, gv.getId().toString());
-                valores.put(GestaoDeViagensItens.VALOR, lancamentoDao.getItem(Configuracoes.TABELA, Configuracoes.VLALIMENTACAO, "1=1"));
-                valores.put(GestaoDeViagensItens.CATEGORIA, spnSelecionado.getId());
-
-                for(int i=0; i<= GetDate.between(gv.getDtInicial(),gv.getDtFinal()); i++){
-                    valores = valores;
-                    valores.put(GestaoDeViagensItens.DATA, ConverterDate.StrToStr(GetDate.addDay(gv.getDtInicial(),i),"dd/MM/yyyy","yyyy-MM-dd"));
-                    lancamentoDao.insert(GestaoDeViagensItens.TABELA, valores);
-                }
-
-                new SnackBar(getString(R.string.registroInserido), gvItemCoordinator, Snackbar.LENGTH_LONG);
-
-                alertAlimentacao.dismiss();
-                carregarCard();
-            }
-        });
-
-        alertAlimentacao.show();
+                        for(int i=0; i<= GetDate.between(gv.getDtInicial(),gv.getDtFinal()); i++){
+                            valores = valores;
+                            valores.put(GestaoDeViagensItens.DATA, ConverterDate.StrToStr(GetDate.addDay(gv.getDtInicial(),i),"dd/MM/yyyy","yyyy-MM-dd"));
+                            lancamentoDao.insert(GestaoDeViagensItens.TABELA, valores);
+                        }
+                        new SnackBar(getString(R.string.registroInserido), gvItemCoordinator, Snackbar.LENGTH_LONG);
+                        carregarCard();
+                    }
+                })
+                .build();
     }
 
     public void botoes(){

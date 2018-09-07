@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,14 +21,18 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +46,7 @@ import com.app.rafael.gestaodeviagem.entidades.TipoCategoria;
 import com.app.rafael.gestaodeviagem.utilidades.Alert;
 import com.app.rafael.gestaodeviagem.utilidades.AlertDynamic;
 import com.app.rafael.gestaodeviagem.utilidades.ConverterDate;
+import com.app.rafael.gestaodeviagem.utilidades.GetDate;
 import com.app.rafael.gestaodeviagem.utilidades.RegraCampo;
 import com.app.rafael.gestaodeviagem.utilidades.SnackBar;
 
@@ -61,7 +68,9 @@ public class DespesasActivity extends Fragment {
     private Dml dml;
     private CoordinatorLayout despesaCoordinator;
     private View view;
-    
+    private LinearLayout linearFiltro;
+    private EditText edtFiltroDtFinal, edtFiltroDtInicial;
+    private Spinner spnFiltroCategoria;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,14 +89,25 @@ public class DespesasActivity extends Fragment {
         recyclerView = (RecyclerView)view.findViewById(R.id.despesaRecyclerView);
         calendar = Calendar.getInstance();
         despesaCoordinator = (CoordinatorLayout) view.findViewById(R.id.despesaCoordinator);
+
+        //Filtros
+        linearFiltro = (LinearLayout)view.findViewById(R.id.DespesaLinearFiltro);
+        edtFiltroDtInicial = (EditText)view.findViewById(R.id.DespesaFiltroEdtDtInicial);
+        edtFiltroDtInicial.setText(GetDate.today(true,0,0).toString());
+        edtFiltroDtFinal = (EditText)view.findViewById(R.id.DespesaFiltroEdtDtFinal);
+        edtFiltroDtFinal.setText(GetDate.today(false,0,0).toString());
+        spnFiltroCategoria = (Spinner)view.findViewById(R.id.DespesaFiltroSpnCategoria);
+        ArrayAdapter<Categoria> spinnerArrayAdapter = new ArrayAdapter<Categoria>(
+                getContext(), android.R.layout.simple_spinner_item ,obterCategoriaDb());
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown);
+        spnFiltroCategoria.setAdapter(spinnerArrayAdapter);
     }
-    
-    
+
     public void botoes(){
         btnAdicionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarRegistro("","","", "", "");
+                adicionarRegistro("","", GetDate.today(), "", "");
             }
         });
 
@@ -100,6 +120,69 @@ public class DespesasActivity extends Fragment {
                 } else if (dy < 0 && btnAdicionar.getVisibility() != View.VISIBLE) {
                     btnAdicionar.show();
                 }
+            }
+        });
+
+        edtFiltroDtInicial.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View view) {
+                obterDataCalendar(edtFiltroDtInicial);
+            }
+        });
+
+        edtFiltroDtFinal.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View view) {
+                obterDataCalendar(edtFiltroDtFinal);
+            }
+        });
+
+        edtFiltroDtInicial.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                carregarCard();
+            }
+        });
+
+        edtFiltroDtFinal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                carregarCard();
+            }
+        });
+
+        spnFiltroCategoria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                carregarCard();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
     }
@@ -115,9 +198,10 @@ public class DespesasActivity extends Fragment {
     public ArrayList<Categoria> obterCategoriaDb(){
         String[] camposSelect={Categorias.ID, Categorias.DESCRICAO, Categorias.TIPO};
         String[] valorCamposWhere = { TipoCategoria.getId("Despesa") };
-        Cursor cursor = dml.getAll(Categorias.TABELA, camposSelect, Categorias.TIPO+"=?", valorCamposWhere,null);
+        Cursor cursor = dml.getAll(Categorias.TABELA, camposSelect, Categorias.TIPO+"=?", valorCamposWhere,Categorias.DESCRICAO+" ASC");
 
         ArrayList<Categoria> list = new ArrayList<Categoria>();
+        list.add(new Categoria(9999,"",""));
 
         if(cursor != null) {
             if (cursor.moveToFirst()){
@@ -174,6 +258,7 @@ public class DespesasActivity extends Fragment {
         spnCategoria = (Spinner) viewInserirDespesa.findViewById(R.id.gvItemInserirSpnCategoria);
         ArrayList<Categoria> list = obterCategoriaDb();
         montaAdapterSpinner(spnCategoria, list);
+        spnCategoria.setSelection(1);
 
         if(!categoriaP.isEmpty()){
             int i=0;
@@ -241,10 +326,27 @@ public class DespesasActivity extends Fragment {
 
 
     private void carregarCard() {
+        Categoria spnSelecionado = ((Categoria)spnFiltroCategoria.getSelectedItem());
+
+        if(!compareDate(edtFiltroDtInicial.getText().toString(), edtFiltroDtFinal.getText().toString())){
+            Alert a = new Alert(getContext(), getString(R.string.atencao),"A data inicial não pode ser superior a data final!");
+            return;
+        }
+
+        String where = Despesas.DATA+" between DATE(?) and DATE(?) "+
+                " and ("+Despesas.CATEGORIA+" = ? or ? = '0')";
+
+        String[] valorWhere = new String[]{
+                ConverterDate.StrToStr(edtFiltroDtInicial.getText().toString(),"dd/MM/yyyy","yyyy-MM-dd"),
+                ConverterDate.StrToStr(edtFiltroDtFinal.getText().toString(),"dd/MM/yyyy","yyyy-MM-dd"),
+                String.valueOf(spnSelecionado.getId()),
+                String.valueOf(spnFiltroCategoria.getSelectedItemPosition())
+        };
+
         //Faz o select de todos os dados passando por parametros a tabela, os camposSelect e a ordem
         String[] camposSelect =  {Despesas.ID, Despesas.CATEGORIA, Despesas.DATA, Despesas.VALOR, Despesas.OBSERVACAO};
 
-        Cursor cursor = dml.getAll(Despesas.TABELA, camposSelect, null, null,Despesas.DATA+" ASC, "+Despesas.CATEGORIA+" ASC");
+        Cursor cursor = dml.getAll(Despesas.TABELA, camposSelect, where, valorWhere,Despesas.DATA+" DESC, "+Despesas.ID+" DESC");
 
         ArrayList<GestaoDeViagemItem> list = new ArrayList<GestaoDeViagemItem>();
 

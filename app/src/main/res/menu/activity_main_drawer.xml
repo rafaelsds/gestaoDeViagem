@@ -6,6 +6,14 @@
 
         <group android:checkableBehavior="single">
             <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/icons8home100"
+                android:title="@string/home"
+                app:showAsAction="ifRoom"/>
+        </group>
+
+        <group android:checkableBehavior="single">
+            <item
                 android:id="@+id/nav_gv"
                 android:icon="@drawable/icons8plus96"
                 android:title="@string/nrGv"
